@@ -9,10 +9,10 @@
     "preview": "vite preview",
     "server": "tsx server/index.ts",
     "server:dev": "tsx watch server/index.ts",
-    "start": "node dist-server/index.js",
+    "start": "NODE_ENV=production tsx server/index.ts",
     "build:server": "tsc --project tsconfig.server.json",
-    "build:all": "npm run build && npm run build:server",
-    "render-build": "npm install && npm run build:all"
+    "build:all": "npm run build",
+    "render-build": "npm install && npm run build"
   },
   "dependencies": {
     "axios": "^1.13.2",
@@ -27,13 +27,14 @@
     "uuid": "^10.0.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  },
-  "devDependencies": {
+    "vite": "^6.2.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
+    "@types/nodemailer": "^6.4.15",
     "@types/uuid": "^10.0.0",
     "tsx": "^4.16.5"
+  },
+  "devDependencies": {
   }
 }
