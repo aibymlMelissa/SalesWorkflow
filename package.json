@@ -8,7 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "tsx server/index.ts",
-    "server:dev": "tsx watch server/index.ts"
+    "server:dev": "tsx watch server/index.ts",
+    "start": "node dist-server/index.js",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:all": "npm run build && npm run build:server",
+    "render-build": "npm install && npm run build:all"
   },
   "dependencies": {
     "axios": "^1.13.2",
