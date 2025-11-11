@@ -218,7 +218,7 @@ SalesWorkflow/
     <>
       <div className="bg-slate-800/50 rounded-xl p-6 shadow-2xl border border-slate-700 min-h-[30rem] flex flex-col">
           <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold text-sky-300">Your Workflow</h2>
+              <h2 className="text-2xl font-semibold text-sky-300">Work Flow Architecture</h2>
               <div className="flex items-center space-x-3">
                   <button
                       onClick={generateArchitectureDoc}

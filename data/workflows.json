@@ -1,0 +1,104 @@
+[
+  {
+    "id": "1762839374376",
+    "name": "Workflow 11/11/2025, 1:36:15 PM",
+    "description": "Auto-saved workflow",
+    "steps": [
+      {
+        "instanceId": "demo_ecommerce-scraper_1762839373344_0",
+        "moduleId": "ecommerce-scraper",
+        "config": {
+          "url": "https://example-store.com",
+          "selectors": ".product, .price, .description"
+        }
+      },
+      {
+        "instanceId": "demo_product-info_1762839373344_1",
+        "moduleId": "product-info",
+        "config": {}
+      },
+      {
+        "instanceId": "demo_web-chatbot_1762839373344_2",
+        "moduleId": "web-chatbot",
+        "config": {
+          "website": "https://example-store.com",
+          "personality": "Friendly and knowledgeable sales assistant"
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_whatsapp-assistant_1762839373344_3",
+        "moduleId": "whatsapp-assistant",
+        "config": {
+          "phone": "+1234567890",
+          "greeting": "Hello! Welcome to our store. How can I help you today?"
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_discount-pricing_1762839373344_4",
+        "moduleId": "discount-pricing",
+        "config": {
+          "strategy": "Volume-based",
+          "maxDiscount": 25
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_quotation_1762839373344_5",
+        "moduleId": "quotation",
+        "config": {
+          "template": "Professional quotation template",
+          "validityDays": 30
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_business-intelligence_1762839373344_6",
+        "moduleId": "business-intelligence",
+        "config": {
+          "competitors": "https://competitor1.com\nhttps://competitor2.com",
+          "reportType": "Market Analysis"
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_human-decision_1762839373344_7",
+        "moduleId": "human-decision",
+        "config": {
+          "approver": "manager@company.com",
+          "instruction": "Please review pricing and quotations",
+          "decisionType": "Approval"
+        }
+      },
+      {
+        "instanceId": "demo_email-interact_1762839373344_8",
+        "moduleId": "email-interact",
+        "config": {
+          "subject": "Your Quotation Request",
+          "signature": "Best regards,\nSales Team"
+        },
+        "llm": "gpt-3.5-turbo"
+      },
+      {
+        "instanceId": "demo_connector-divisions_1762839373344_9",
+        "moduleId": "connector-divisions",
+        "config": {
+          "divisions": "Logistics, Finance, Marketing",
+          "syncFrequency": "Real-time"
+        }
+      },
+      {
+        "instanceId": "demo_sales-analysis_1762839373344_10",
+        "moduleId": "sales-analysis",
+        "config": {
+          "metrics": "Conversion rate, Revenue, Lead quality",
+          "period": "Monthly"
+        },
+        "llm": "gpt-3.5-turbo"
+      }
+    ],
+    "createdAt": "2025-11-11T05:36:14.376Z",
+    "updatedAt": "2025-11-11T05:36:15.393Z"
+  }
+]

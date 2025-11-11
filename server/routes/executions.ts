@@ -1,5 +1,6 @@
 import express from 'express';
 import { ExecutionStorage, WorkflowStorage, ModuleStorage } from '../utils/storage.js';
+import { executeModule, hasRealImplementation } from '../executors/index.js';
 
 export const executionRoutes = express.Router();
 
@@ -46,14 +47,36 @@ executionRoutes.post('/:id/step', async (req, res) => {
       return res.status(404).json({ error: 'Module not found' });
     }
 
-    const mockResult = await simulateModuleExecution(module, currentStep.config);
+    // Get previous step results for modules that need input
+    const previousStepResult = execution.currentStepIndex > 0
+      ? execution.results[execution.currentStepIndex - 1]
+      : null;
+
+    // Execute module (real or simulated)
+    let result;
+    try {
+      if (hasRealImplementation(module.id)) {
+        console.log(`Executing real implementation for module: ${module.id}`);
+        result = await executeModule(module.id, currentStep.config, previousStepResult, currentStep.llm);
+      } else {
+        console.log(`Using simulated execution for module: ${module.id}`);
+        result = await simulateModuleExecution(module, currentStep.config);
+      }
+    } catch (error: any) {
+      console.error(`Module execution error:`, error);
+      result = {
+        status: 'error',
+        error: error.message,
+        message: `Failed to execute ${module.name}`
+      };
+    }
 
     const updatedExecution = await ExecutionStorage.update(execution.id, {
       status: execution.currentStepIndex + 1 >= workflow.steps.length ? 'completed' : 'running',
       currentStepIndex: execution.currentStepIndex + 1,
       results: {
         ...execution.results,
-        [execution.currentStepIndex]: mockResult
+        [execution.currentStepIndex]: result
       },
       completedAt: execution.currentStepIndex + 1 >= workflow.steps.length ? new Date().toISOString() : execution.completedAt
     });

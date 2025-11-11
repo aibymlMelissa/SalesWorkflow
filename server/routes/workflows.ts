@@ -2,6 +2,7 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { WorkflowStorage, ExecutionStorage } from '../utils/storage.js';
 import { Workflow, WorkflowStep } from '../types.js';
+import { ParallelWorkflowExecutor } from '../utils/parallel-executor.js';
 
 export const workflowRoutes = express.Router();
 
@@ -110,6 +111,76 @@ workflowRoutes.post('/:id/execute', async (req, res) => {
     res.status(201).json(execution);
   } catch (error) {
     res.status(500).json({ error: 'Failed to start workflow execution' });
+  }
+});
+
+workflowRoutes.post('/:id/execute-parallel', async (req, res) => {
+  try {
+    const workflow = await WorkflowStorage.getById(req.params.id);
+    if (!workflow) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
+
+    console.log(`Starting parallel execution for workflow: ${workflow.id}`);
+
+    // Analyze parallelism
+    const analysis = ParallelWorkflowExecutor.analyzeParallelism(workflow.steps);
+    console.log('Parallelism analysis:', analysis);
+
+    // Execute workflow in parallel
+    const executor = new ParallelWorkflowExecutor(workflow.steps);
+    const startTime = Date.now();
+
+    const results = await executor.execute();
+
+    const duration = Date.now() - startTime;
+
+    // Convert Map to object for response
+    const resultsObj: any = {};
+    results.forEach((value, key) => {
+      resultsObj[key] = value;
+    });
+
+    res.status(200).json({
+      workflowId: workflow.id,
+      status: 'completed',
+      executionMode: 'parallel',
+      duration: `${duration}ms`,
+      parallelism: analysis,
+      results: resultsObj,
+      stats: executor.getStats(),
+      completedAt: new Date().toISOString()
+    });
+
+  } catch (error: any) {
+    console.error('Parallel execution error:', error);
+    res.status(500).json({
+      error: 'Failed to execute workflow in parallel',
+      message: error.message
+    });
+  }
+});
+
+workflowRoutes.get('/:id/analyze', async (req, res) => {
+  try {
+    const workflow = await WorkflowStorage.getById(req.params.id);
+    if (!workflow) {
+      return res.status(404).json({ error: 'Workflow not found' });
+    }
+
+    const analysis = ParallelWorkflowExecutor.analyzeParallelism(workflow.steps);
+
+    res.json({
+      workflowId: workflow.id,
+      analysis: {
+        ...analysis,
+        canParallelize: analysis.maxParallelism > 1,
+        estimatedSpeedup: `${analysis.maxParallelism}x (theoretical maximum)`
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to analyze workflow' });
   }
 });
 

@@ -33,6 +33,8 @@ export interface WorkflowStep {
   moduleId: string;
   config: { [key: string]: string | number };
   llm?: string;
+  dependsOn?: string[];  // Array of instanceIds this step depends on
+  position?: { x: number; y: number };  // For visual layout
 }
 
 export interface Workflow {
